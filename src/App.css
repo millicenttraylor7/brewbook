@@ -7,7 +7,7 @@
    Base Styles
 ===================== */
 :root {
-  --text: brown;
+  --text: chocolate brown;
   --muted: #6b7280;
   --border: #e5e7eb;
   --bg: #ffffff;
@@ -89,4 +89,52 @@ p {
 
 .app-main {
   padding: 20px;
+}
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.recipe-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  background: #fff;
+}
+
+.recipe-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.recipe-card__title {
+  font-size: 18px;
+  margin: 0;
+}
+
+.recipe-card__tag {
+  font-size: 12px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.recipe-card__meta {
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
+.recipe-card__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.recipe-card__link {
+  text-decoration: none;
+  font-weight: 600;
 }

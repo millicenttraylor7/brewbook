@@ -30,7 +30,8 @@ export function useRecipes() {
             setRecipes(seedRecipes);
           }
         }
-      } catch (e) {
+      } catch {
+        // ignore the error but keep UI responsive
         if (!cancelled) setError("Could not load recipes. Please refresh.");
       } finally {
         if (!cancelled) setLoading(false);
@@ -50,7 +51,7 @@ export function useRecipes() {
     if (loading) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes));
-    } catch (e) {
+    } catch {
       // Keep UI running even if storage fails
     }
   }, [recipes, loading]);

@@ -1,16 +1,20 @@
+import RecipeCard from "../features/recipes/components/RecipeCard";
 import { useRecipes } from "../features/recipes/hooks/useRecipes";
 
 export default function HomePage() {
   const { recipes, loading, error } = useRecipes();
 
+  // Loading state
   if (loading) {
     return <p>Loading recipes…</p>;
   }
 
+  // Error state
   if (error) {
     return <p role="alert">{error}</p>;
   }
 
+  // Empty state
   if (recipes.length === 0) {
     return <p>No recipes yet. Add one!</p>;
   }
@@ -20,13 +24,11 @@ export default function HomePage() {
       <h1>BrewBook</h1>
       <p>Pick a recipe to get started.</p>
 
-      <ul>
-        {recipes.map((r) => (
-          <li key={r.id}>
-            <strong>{r.name}</strong> — {r.method} • {r.timeMinutes} min
-          </li>
+      <div className="recipe-grid">
+        {recipes.map((recipe) => (
+          <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
-      </ul>
+      </div>
     </section>
   );
 }

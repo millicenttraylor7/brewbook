@@ -24,7 +24,7 @@ export default function Layout() {
       </header>
 
       <main className="app-main">
-        <p>Layout is rendering ✅</p>
+        <p>HELLO WELCOME</p>
         <Outlet />
       </main>
     </div>
