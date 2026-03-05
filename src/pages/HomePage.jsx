@@ -1,34 +1,60 @@
+import { useMemo, useState } from "react";
 import RecipeCard from "../features/recipes/components/RecipeCard";
 import { useRecipes } from "../features/recipes/hooks/useRecipes";
 
 export default function HomePage() {
   const { recipes, loading, error } = useRecipes();
+  const [query, setQuery] = useState("");
 
-  // Loading state
-  if (loading) {
-    return <p>Loading recipes…</p>;
-  }
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return recipes;
 
-  // Error state
-  if (error) {
-    return <p role="alert">{error}</p>;
-  }
+    return recipes.filter((r) => {
+      const name = (r.name ?? "").toLowerCase();
+      const method = (r.method ?? "").toLowerCase();
+      return name.includes(q) || method.includes(q);
+    });
+  }, [recipes, query]);
 
-  // Empty state
-  if (recipes.length === 0) {
-    return <p>No recipes yet. Add one!</p>;
-  }
+  if (loading) return <p>Loading recipes…</p>;
+  if (error) return <p role="alert">{error}</p>;
 
   return (
     <section>
       <h1>BrewBook</h1>
-      <p>Pick a recipe to get started.</p>
+      <p>Search and manage your favorite coffee recipes.</p>
 
-      <div className="recipe-grid">
-        {recipes.map((recipe) => (
-          <RecipeCard key={recipe.id} recipe={recipe} />
-        ))}
+      <div className="search-row">
+        <label className="sr-only" htmlFor="recipe-search">
+          Search recipes
+        </label>
+        <input
+          id="recipe-search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search by name or method (e.g., latte, cold-brew)"
+        />
+        {query ? (
+          <button
+            type="button"
+            className="secondary"
+            onClick={() => setQuery("")}
+          >
+            Clear
+          </button>
+        ) : null}
       </div>
+
+      {filtered.length === 0 ? (
+        <p className="muted">No recipes match “{query.trim()}”.</p>
+      ) : (
+        <div className="recipe-grid">
+          {filtered.map((recipe) => (
+            <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

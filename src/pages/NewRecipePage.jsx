@@ -2,30 +2,20 @@ import { useNavigate } from "react-router-dom";
 import RecipeForm from "../features/recipes/components/RecipeForm";
 import { useRecipes } from "../features/recipes/hooks/useRecipes";
 import { makeId } from "../features/recipes/utils/id";
-
-function parseLines(text) {
-  return text
-    .split("\n")
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
+import {
+  toIngredients,
+  toSteps,
+} from "../features/recipes/utils/recipeTransforms";
 
 function toRecipe(formValues) {
-  const ingredients = parseLines(formValues.ingredientsText).map((line) => {
-    // Keep it simple: store as a string item for now
-    return { item: line, amount: "", unit: "" };
-  });
-
-  const steps = parseLines(formValues.stepsText);
-
   return {
     id: makeId(),
     name: formValues.name.trim(),
     method: formValues.method,
     timeMinutes: formValues.timeMinutes,
     servings: formValues.servings,
-    ingredients,
-    steps,
+    ingredients: toIngredients(formValues.ingredientRows),
+    steps: toSteps(formValues.stepRows),
     notes: formValues.notes.trim(),
   };
 }

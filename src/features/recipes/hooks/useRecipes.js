@@ -1,7 +1,27 @@
 import { useCallback, useEffect, useState } from "react";
 import { seedRecipes } from "../data/seedRecipes";
+import { makeId } from "../utils/id";
 
 const STORAGE_KEY = "brewbook.recipes";
+
+function ensureIds(list) {
+  if (!Array.isArray(list)) return [];
+
+  return list.map((r) => ({
+    ...r,
+    ingredients: (r.ingredients ?? []).map((ing) => ({
+      id: ing.id ?? makeId(),
+      amount: ing.amount ?? "",
+      unit: ing.unit ?? "",
+      item: ing.item ?? "",
+    })),
+    steps: (r.steps ?? []).map((s) =>
+      typeof s === "string"
+        ? { id: makeId(), text: s }
+        : { id: s.id ?? makeId(), text: s.text ?? "" },
+    ),
+  }));
+}
 
 export function useRecipes() {
   const [recipes, setRecipes] = useState([]);
@@ -17,7 +37,6 @@ export function useRecipes() {
       setError("");
 
       try {
-        // simulate async (also meets “async communication” pattern)
         await new Promise((resolve) => setTimeout(resolve, 150));
 
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -25,13 +44,12 @@ export function useRecipes() {
 
         if (!cancelled) {
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setRecipes(parsed);
+            setRecipes(ensureIds(parsed));
           } else {
-            setRecipes(seedRecipes);
+            setRecipes(ensureIds(seedRecipes));
           }
         }
       } catch {
-        // ignore the error but keep UI responsive
         if (!cancelled) setError("Could not load recipes. Please refresh.");
       } finally {
         if (!cancelled) setLoading(false);
@@ -40,7 +58,6 @@ export function useRecipes() {
 
     load();
 
-    // cleanup as appropriate ✅
     return () => {
       cancelled = true;
     };
@@ -57,11 +74,14 @@ export function useRecipes() {
   }, [recipes, loading]);
 
   const addRecipe = useCallback((newRecipe) => {
-    setRecipes((prev) => [newRecipe, ...prev]);
+    setRecipes((prev) => [ensureIds([newRecipe])[0], ...prev]);
   }, []);
 
   const updateRecipe = useCallback((updated) => {
-    setRecipes((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
+    const normalized = ensureIds([updated])[0];
+    setRecipes((prev) =>
+      prev.map((r) => (r.id === normalized.id ? normalized : r)),
+    );
   }, []);
 
   const deleteRecipe = useCallback((id) => {

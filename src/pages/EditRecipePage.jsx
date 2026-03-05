@@ -1,12 +1,73 @@
-import { useParams } from "react-router-dom";
+import { useMemo } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import RecipeForm from "../features/recipes/components/RecipeForm";
+import { useRecipes } from "../features/recipes/hooks/useRecipes";
+import {
+  toIngredients,
+  toSteps,
+} from "../features/recipes/utils/recipeTransforms";
+
+function toFormInitialValues(recipe) {
+  return {
+    name: recipe.name ?? "",
+    method: recipe.method ?? "espresso",
+    timeMinutes: recipe.timeMinutes ?? 5,
+    servings: recipe.servings ?? 1,
+    notes: recipe.notes ?? "",
+    ingredients: recipe.ingredients ?? [],
+    steps: recipe.steps ?? [],
+  };
+}
+
+function toUpdatedRecipe(recipe, formValues) {
+  return {
+    ...recipe,
+    name: formValues.name.trim(),
+    method: formValues.method,
+    timeMinutes: formValues.timeMinutes,
+    servings: formValues.servings,
+    notes: formValues.notes.trim(),
+    ingredients: toIngredients(formValues.ingredientRows),
+    steps: toSteps(formValues.stepRows),
+  };
+}
 
 export default function EditRecipePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { recipes, loading, error, updateRecipe } = useRecipes();
+
+  const recipe = useMemo(() => recipes.find((r) => r.id === id), [recipes, id]);
+
+  if (loading) return <p>Loading recipe…</p>;
+  if (error) return <p role="alert">{error}</p>;
+
+  if (!recipe) {
+    return (
+      <section>
+        <h1>Recipe not found</h1>
+        <Link className="btn-link" to="/">
+          Back to Home
+        </Link>
+      </section>
+    );
+  }
+
+  async function handleSubmit(values) {
+    const updated = toUpdatedRecipe(recipe, values);
+    updateRecipe(updated);
+    navigate(`/recipes/${recipe.id}`);
+  }
 
   return (
     <section>
       <h1>Edit Recipe</h1>
-      <p>Editing recipe ID: {id}</p>
+      <RecipeForm
+        initialValues={toFormInitialValues(recipe)}
+        submitLabel="Save changes"
+        onSubmit={handleSubmit}
+        onCancel={() => navigate(`/recipes/${recipe.id}`)}
+      />
     </section>
   );
 }

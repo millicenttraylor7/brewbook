@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
+import { makeId } from "../utils/id";
 import { validateRecipe } from "../utils/validateRecipe";
+import { toIngredientRows, toStepRows } from "../utils/recipeTransforms";
 
 const METHOD_OPTIONS = [
   { value: "espresso", label: "Espresso" },
@@ -16,8 +18,12 @@ function normalizeInitialValues(initialValues) {
     timeMinutes: initialValues?.timeMinutes ?? 5,
     servings: initialValues?.servings ?? 1,
     notes: initialValues?.notes ?? "",
-    ingredientsText: initialValues?.ingredientsText ?? "",
-    stepsText: initialValues?.stepsText ?? "",
+    ingredientRows: toIngredientRows(
+      initialValues?.ingredients ?? [
+        { id: makeId(), amount: "", unit: "", item: "" },
+      ],
+    ),
+    stepRows: toStepRows(initialValues?.steps ?? [{ id: makeId(), text: "" }]),
   };
 }
 
@@ -38,7 +44,6 @@ export default function RecipeForm({
 
   function handleChange(e) {
     const { name, value, type } = e.target;
-
     setValues((prev) => ({
       ...prev,
       [name]: type === "number" ? Number(value) : value,
@@ -48,6 +53,55 @@ export default function RecipeForm({
   function handleBlur(e) {
     const { name } = e.target;
     setTouched((prev) => ({ ...prev, [name]: true }));
+  }
+
+  function updateIngredient(id, field, nextValue) {
+    setValues((prev) => ({
+      ...prev,
+      ingredientRows: prev.ingredientRows.map((row) =>
+        row.id === id ? { ...row, [field]: nextValue } : row,
+      ),
+    }));
+  }
+
+  function addIngredientRow() {
+    setValues((prev) => ({
+      ...prev,
+      ingredientRows: [
+        ...prev.ingredientRows,
+        { id: makeId(), amount: "", unit: "", item: "" },
+      ],
+    }));
+  }
+
+  function removeIngredientRow(id) {
+    setValues((prev) => ({
+      ...prev,
+      ingredientRows: prev.ingredientRows.filter((row) => row.id !== id),
+    }));
+  }
+
+  function updateStep(id, nextValue) {
+    setValues((prev) => ({
+      ...prev,
+      stepRows: prev.stepRows.map((row) =>
+        row.id === id ? { ...row, text: nextValue } : row,
+      ),
+    }));
+  }
+
+  function addStepRow() {
+    setValues((prev) => ({
+      ...prev,
+      stepRows: [...prev.stepRows, { id: makeId(), text: "" }],
+    }));
+  }
+
+  function removeStepRow(id) {
+    setValues((prev) => ({
+      ...prev,
+      stepRows: prev.stepRows.filter((row) => row.id !== id),
+    }));
   }
 
   async function handleSubmit(e) {
@@ -103,11 +157,6 @@ export default function RecipeForm({
             </option>
           ))}
         </select>
-        {touched.method && errors.method ? (
-          <p className="form-error" role="alert">
-            {errors.method}
-          </p>
-        ) : null}
       </div>
 
       <div className="form-grid">
@@ -149,29 +198,85 @@ export default function RecipeForm({
       </div>
 
       <div className="form-row">
-        <label htmlFor="ingredientsText">Ingredients (one per line)</label>
-        <textarea
-          id="ingredientsText"
-          name="ingredientsText"
-          value={values.ingredientsText}
-          onChange={handleChange}
-          placeholder={"Espresso - 2 shots\nMilk - 8 oz\nIce - 1 cup"}
-          rows={5}
-        />
+        <div className="row-header">
+          <label>Ingredients</label>
+          <button type="button" className="mini" onClick={addIngredientRow}>
+            + Add ingredient
+          </button>
+        </div>
+
+        <div className="stack">
+          {values.ingredientRows.map((row) => (
+            <div className="line-row" key={row.id}>
+              <input
+                className="line-row__amount"
+                value={row.amount}
+                onChange={(e) =>
+                  updateIngredient(row.id, "amount", e.target.value)
+                }
+                placeholder="Amount"
+              />
+              <input
+                className="line-row__unit"
+                value={row.unit}
+                onChange={(e) =>
+                  updateIngredient(row.id, "unit", e.target.value)
+                }
+                placeholder="Unit"
+              />
+              <input
+                className="line-row__item"
+                value={row.item}
+                onChange={(e) =>
+                  updateIngredient(row.id, "item", e.target.value)
+                }
+                placeholder="Ingredient"
+              />
+
+              <button
+                type="button"
+                className="mini danger"
+                onClick={() => removeIngredientRow(row.id)}
+                aria-label="Remove ingredient"
+                disabled={values.ingredientRows.length <= 1}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="form-row">
-        <label htmlFor="stepsText">Steps (one per line)</label>
-        <textarea
-          id="stepsText"
-          name="stepsText"
-          value={values.stepsText}
-          onChange={handleChange}
-          placeholder={
-            "Pull espresso shots\nAdd ice to glass\nPour milk and espresso"
-          }
-          rows={5}
-        />
+        <div className="row-header">
+          <label>Steps</label>
+          <button type="button" className="mini" onClick={addStepRow}>
+            + Add step
+          </button>
+        </div>
+
+        <div className="stack">
+          {values.stepRows.map((row) => (
+            <div className="line-row" key={row.id}>
+              <input
+                className="line-row__item"
+                value={row.text}
+                onChange={(e) => updateStep(row.id, e.target.value)}
+                placeholder="Describe the step…"
+              />
+
+              <button
+                type="button"
+                className="mini danger"
+                onClick={() => removeStepRow(row.id)}
+                aria-label="Remove step"
+                disabled={values.stepRows.length <= 1}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="form-row">
