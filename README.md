@@ -1,16 +1,120 @@
-# React + Vite
+# BrewBook ☕
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+BrewBook is a React coffee recipe application that allows users to create, view, edit, delete, and search coffee recipes. Recipe data is persisted using browser localStorage so changes remain after page refresh.
 
-Currently, two official plugins are available:
+This project was built using React + Vite and demonstrates routing, reusable components, custom hooks, controlled forms, and state persistence.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- View recipe cards
+- Search recipes by name or method
+- Add new recipes
+- Edit existing recipes
+- Delete recipes
+- Persistent data using localStorage
+- Responsive card layout
+- Shared layout components
+- Conditional rendering and loading states
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠 Tech Stack
+
+- React
+- Vite
+- React Router DOM
+- JavaScript (ES6+)
+- CSS
+- Google Fonts (Inter + Poppins)
+
+---
+
+## 📂 Project Structure
+
+src/
+features/
+recipes/
+favorites/
+preferences/
+shared/
+components/
+pages/
+
+### Key Architecture
+
+- **Custom Hook:** `useRecipes` handles state, persistence, and CRUD operations.
+- **Shared Components:** `Card`, `PageHeader`, and `Layout`.
+- **Feature-based folder structure** for scalability.
+- **React Router** handles navigation with protected page structure.
+
+---
+
+## 🚀 Installation & Running the App
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/YOUR-USERNAME/brewbook.git
+```
+
+Navigate into the project folder:
+cd brewbook
+
+Install dependencies:
+npm install
+
+Start the development server:
+npm run dev
+
+Open the app in your browser:
+http://localhost:5173
+
+💾 Data & Persistence
+
+This application uses browser localStorage to persist recipe data.
+
+On startup, the app loads saved recipes from localStorage.
+
+If none exist, seed data is loaded.
+
+All create, update, and delete actions automatically update localStorage.
+
+No backend or API key is required.
+
+🌱 Environment Variables
+
+This project does not require any environment variables.
+
+An .env.local.example file is included for rubric compliance.
+
+🌱 Environment Variables
+
+This project does not require any environment variables.
+
+An .env.local.example file is included for rubric compliance.
+
+🎯 Learning Objectives Demonstrated
+
+Functional React components
+
+Controlled form inputs
+
+Custom hooks (useRecipes)
+
+useEffect and useCallback hooks
+
+Conditional rendering
+
+Component composition using children
+
+Shared reusable layout components
+
+Persistent state management
+
+Feature-based project organization
+
+📄 License
+
+This project was created for educational purposes.

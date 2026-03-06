@@ -6,6 +6,8 @@ import {
   toIngredients,
   toSteps,
 } from "../features/recipes/utils/recipeTransforms";
+import Card from "../shared/components/Card";
+import PageHeader from "../shared/components/PageHeader";
 
 function toFormInitialValues(recipe) {
   return {
@@ -45,10 +47,14 @@ export default function EditRecipePage() {
   if (!recipe) {
     return (
       <section>
-        <h1>Recipe not found</h1>
-        <Link className="btn-link" to="/">
-          Back to Home
-        </Link>
+        <PageHeader
+          title="Recipe not found"
+          actions={
+            <Link className="btn-link" to="/">
+              Back to Home
+            </Link>
+          }
+        />
       </section>
     );
   }
@@ -61,13 +67,24 @@ export default function EditRecipePage() {
 
   return (
     <section>
-      <h1>Edit Recipe</h1>
-      <RecipeForm
-        initialValues={toFormInitialValues(recipe)}
-        submitLabel="Save changes"
-        onSubmit={handleSubmit}
-        onCancel={() => navigate(`/recipes/${recipe.id}`)}
+      <PageHeader
+        title="Edit Recipe"
+        subtitle={`Update ${recipe.name}`}
+        actions={
+          <Link className="btn-link" to={`/recipes/${recipe.id}`}>
+            Back to Recipe
+          </Link>
+        }
       />
+
+      <Card>
+        <RecipeForm
+          initialValues={toFormInitialValues(recipe)}
+          submitLabel="Save changes"
+          onSubmit={handleSubmit}
+          onCancel={() => navigate(`/recipes/${recipe.id}`)}
+        />
+      </Card>
     </section>
   );
 }

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import RecipeCard from "../features/recipes/components/RecipeCard";
 import { useRecipes } from "../features/recipes/hooks/useRecipes";
+import Card from "../shared/components/Card";
 
 export default function HomePage() {
   const { recipes, loading, error } = useRecipes();
@@ -46,15 +47,17 @@ export default function HomePage() {
         ) : null}
       </div>
 
-      {filtered.length === 0 ? (
-        <p className="muted">No recipes match “{query.trim()}”.</p>
-      ) : (
-        <div className="recipe-grid">
-          {filtered.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
-          ))}
-        </div>
-      )}
+      <Card title="All Recipes">
+        {filtered.length === 0 ? (
+          <p className="muted">No recipes match “{query.trim()}”.</p>
+        ) : (
+          <div className="recipe-grid">
+            {filtered.map((recipe) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+            ))}
+          </div>
+        )}
+      </Card>
     </section>
   );
 }

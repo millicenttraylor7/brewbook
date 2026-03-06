@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRecipes } from "../features/recipes/hooks/useRecipes";
+import Card from "../shared/components/Card";
+import PageHeader from "../shared/components/PageHeader";
 
 function formatIngredient(ing) {
   const amount = ing.amount ?? "";
@@ -13,16 +15,6 @@ function formatIngredient(ing) {
 
   const qty = parts.join(" ");
   return qty ? `${qty} ${item}` : item;
-}
-
-function getStepText(step) {
-  if (typeof step === "string") return step;
-  return step?.text ?? "";
-}
-
-function getStepKey(step, fallbackKey) {
-  if (typeof step === "string") return fallbackKey;
-  return step?.id ?? fallbackKey;
 }
 
 export default function RecipePage() {
@@ -64,38 +56,33 @@ export default function RecipePage() {
 
   return (
     <section>
-      <div className="page-header">
-        <div>
-          <h1>{recipe.name}</h1>
-          <p className="muted">
-            {recipe.method} • {recipe.timeMinutes} minutes • Serves{" "}
-            {recipe.servings}
-          </p>
-        </div>
+      <PageHeader
+        title={recipe.name}
+        subtitle={`${recipe.method} • ${recipe.timeMinutes} minutes • Serves ${recipe.servings}`}
+        actions={
+          <>
+            <Link className="btn-link" to={`/recipes/${recipe.id}/edit`}>
+              Edit
+            </Link>
 
-        <div className="page-actions">
-          <Link className="btn-link" to={`/recipes/${recipe.id}/edit`}>
-            Edit
-          </Link>
+            <button
+              type="button"
+              className="btn-danger"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting…" : "Delete"}
+            </button>
 
-          <button
-            type="button"
-            className="btn-danger"
-            onClick={handleDelete}
-            disabled={isDeleting}
-          >
-            {isDeleting ? "Deleting…" : "Delete"}
-          </button>
-
-          <Link className="btn-link" to="/">
-            Home
-          </Link>
-        </div>
-      </div>
+            <Link className="btn-link" to="/">
+              Home
+            </Link>
+          </>
+        }
+      />
 
       <div className="detail-grid">
-        <article className="panel">
-          <h2>Ingredients</h2>
+        <Card title="Ingredients">
           {recipe.ingredients?.length ? (
             <ul className="list">
               {recipe.ingredients.map((ing) => (
@@ -105,29 +92,25 @@ export default function RecipePage() {
           ) : (
             <p className="muted">No ingredients listed.</p>
           )}
-        </article>
+        </Card>
 
-        <article className="panel">
-          <h2>Steps</h2>
+        <Card title="Steps">
           {recipe.steps?.length ? (
             <ol className="list">
               {recipe.steps.map((step) => (
-                <li key={getStepKey(step, `${recipe.id}-${getStepText(step)}`)}>
-                  {getStepText(step)}
-                </li>
+                <li key={step.id}>{step.text}</li>
               ))}
             </ol>
           ) : (
             <p className="muted">No steps listed.</p>
           )}
-        </article>
+        </Card>
       </div>
 
       {recipe.notes ? (
-        <article className="panel" style={{ marginTop: 16 }}>
-          <h2>Notes</h2>
+        <Card title="Notes">
           <p>{recipe.notes}</p>
-        </article>
+        </Card>
       ) : null}
     </section>
   );

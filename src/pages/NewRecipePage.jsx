@@ -6,6 +6,8 @@ import {
   toIngredients,
   toSteps,
 } from "../features/recipes/utils/recipeTransforms";
+import Card from "../shared/components/Card";
+import PageHeader from "../shared/components/PageHeader";
 
 function toRecipe(formValues) {
   return {
@@ -32,12 +34,27 @@ export default function NewRecipePage() {
 
   return (
     <section>
-      <h1>Add Recipe</h1>
-      <RecipeForm
-        submitLabel="Create recipe"
-        onSubmit={handleSubmit}
-        onCancel={() => navigate("/")}
+      <PageHeader
+        title="Add Recipe"
+        subtitle="Create a new coffee recipe"
+        actions={
+          <button
+            type="button"
+            className="btn-link"
+            onClick={() => navigate("/")}
+          >
+            Back to Home
+          </button>
+        }
       />
+
+      <Card>
+        <RecipeForm
+          submitLabel="Create recipe"
+          onSubmit={handleSubmit}
+          onCancel={() => navigate("/")}
+        />
+      </Card>
     </section>
   );
 }

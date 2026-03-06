@@ -7,10 +7,16 @@
    Base Styles
 ===================== */
 :root {
-  --text: chocolate brown;
-  --muted: #6b7280;
-  --border: #e5e7eb;
+  --text: #3e2723; /* espresso brown */
+  --muted: #7b6f6a;
+  --border: #e6dfd7;
   --bg: #ffffff;
+  --surface: #ffffff;
+  --page: #faf6f2; /* warm café background */
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
@@ -23,7 +29,7 @@ body {
     "Segoe UI",
     sans-serif;
   color: var(--text);
-  background: var(--bg);
+  background: var(--page);
 }
 
 h1,
@@ -62,6 +68,7 @@ p {
   gap: 16px;
   padding: 16px 20px;
   border-bottom: 1px solid var(--border);
+  background: var(--bg);
 }
 
 .brand {
@@ -90,10 +97,14 @@ p {
 .app-main {
   padding: 20px;
 }
+
+/* =====================
+   Recipe Grid + Card
+===================== */
 .recipe-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
+  gap: 18px;
   margin-top: 16px;
 }
 
@@ -101,7 +112,18 @@ p {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
-  background: #fff;
+  background: var(--surface);
+
+  /* added polish */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.recipe-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
 }
 
 .recipe-card__header {
@@ -121,6 +143,7 @@ p {
   padding: 4px 8px;
   border: 1px solid var(--border);
   border-radius: 999px;
+  color: var(--text);
 }
 
 .recipe-card__meta {
@@ -137,13 +160,20 @@ p {
 .recipe-card__link {
   text-decoration: none;
   font-weight: 600;
+  color: var(--text);
 }
+
+/* =====================
+   Forms
+===================== */
 .form {
   max-width: 720px;
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
-  background: #fff;
+  background: var(--surface);
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .form-row {
@@ -166,6 +196,8 @@ p {
   border-radius: 10px;
   padding: 10px 12px;
   font: inherit;
+  color: var(--text);
+  background: var(--bg);
 }
 
 .form-error {
@@ -186,11 +218,17 @@ button {
   padding: 10px 12px;
   font: inherit;
   cursor: pointer;
+  background: var(--bg);
+  color: var(--text);
 }
 
 button.secondary {
   background: transparent;
 }
+
+/* =====================
+   Detail Page
+===================== */
 .page-header {
   display: flex;
   align-items: flex-start;
@@ -205,11 +243,13 @@ button.secondary {
 .page-actions {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 
 .btn-link {
   text-decoration: none;
   font-weight: 700;
+  color: var(--text);
 }
 
 .detail-grid {
@@ -223,13 +263,19 @@ button.secondary {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
-  background: #fff;
+  background: var(--surface);
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .list {
   margin: 10px 0 0;
   padding-left: 18px;
 }
+
+/* =====================
+   Ingredients/Steps rows
+===================== */
 .row-header {
   display: flex;
   align-items: center;
@@ -250,14 +296,8 @@ button.secondary {
   align-items: center;
 }
 
-.line-row__amount {
-  width: 100%;
-}
-
-.line-row__unit {
-  width: 100%;
-}
-
+.line-row__amount,
+.line-row__unit,
 .line-row__item {
   width: 100%;
 }
@@ -270,6 +310,10 @@ button.mini {
 button.danger {
   border-color: #fca5a5;
 }
+
+/* =====================
+   Delete button
+===================== */
 .btn-danger {
   border: 1px solid #ef4444;
   border-radius: 10px;
@@ -278,12 +322,17 @@ button.danger {
   cursor: pointer;
   background: transparent;
   font-weight: 700;
+  color: #b91c1c;
 }
 
 .btn-danger:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* =====================
+   Search
+===================== */
 .search-row {
   display: flex;
   gap: 10px;
@@ -297,6 +346,8 @@ button.danger {
   border-radius: 10px;
   padding: 10px 12px;
   font: inherit;
+  color: var(--text);
+  background: var(--bg);
 }
 
 .sr-only {
