@@ -4,7 +4,10 @@ export default function Layout() {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <div className="brand">BrewBook</div>
+        <div className="brand">
+          BrewBook
+          <span className="tagline">Craft your perfect cup.</span>
+        </div>
 
         <nav className="nav" aria-label="Primary navigation">
           <NavLink
@@ -14,6 +17,7 @@ export default function Layout() {
           >
             Home
           </NavLink>
+
           <NavLink
             to="/recipes/new"
             className={({ isActive }) => (isActive ? "active" : "")}
@@ -24,7 +28,6 @@ export default function Layout() {
       </header>
 
       <main className="app-main">
-        <p>HELLO WELCOME</p>
         <Outlet />
       </main>
     </div>

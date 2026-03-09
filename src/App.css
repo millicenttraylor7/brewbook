@@ -361,3 +361,24 @@ button.danger {
   white-space: nowrap;
   border: 0;
 }
+.brand {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.tagline {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.recipe-card__image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}

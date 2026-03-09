@@ -35,6 +35,7 @@ export async function fetchCoffeeCocktails() {
         method: "cocktail",
         timeMinutes: 5,
         servings: 1,
+        image: drink.strDrinkThumb ? `${drink.strDrinkThumb}/medium` : "",
         ingredients,
         steps: drink.strInstructions
           ? [

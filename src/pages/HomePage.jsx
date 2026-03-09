@@ -24,7 +24,11 @@ export default function HomePage() {
   return (
     <section>
       <h1>BrewBook</h1>
-      <p>Search and manage your favorite coffee recipes.</p>
+      <p>
+        Welcome to BrewBook — your personal coffee recipe companion. Discover,
+        create, and customize your favorite coffee drinks, from classic espresso
+        staples to imported cocktail-inspired creations.
+      </p>
 
       <div className="search-row">
         <label className="sr-only" htmlFor="recipe-search">
