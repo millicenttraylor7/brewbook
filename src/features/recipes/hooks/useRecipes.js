@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { seedRecipes } from "../data/seedRecipes";
 import { makeId } from "../utils/id";
+import { fetchCoffeeCocktails } from "../api/cocktailApi";
 
 const STORAGE_KEY = "brewbook.recipes";
 
@@ -28,7 +29,6 @@ export function useRecipes() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // useEffect #1: load from localStorage on startup (with a tiny async delay)
   useEffect(() => {
     let cancelled = false;
 
@@ -42,15 +42,37 @@ export function useRecipes() {
         const raw = localStorage.getItem(STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : null;
 
-        if (!cancelled) {
-          if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          if (!cancelled) {
             setRecipes(ensureIds(parsed));
-          } else {
-            setRecipes(ensureIds(seedRecipes));
+          }
+          return;
+        }
+
+        const starterRecipes = ensureIds(seedRecipes);
+
+        let apiRecipes = [];
+        try {
+          apiRecipes = ensureIds(await fetchCoffeeCocktails());
+        } catch {
+          apiRecipes = [];
+        }
+
+        const combinedRecipes = [...starterRecipes, ...apiRecipes];
+
+        if (!cancelled) {
+          setRecipes(combinedRecipes);
+          if (apiRecipes.length === 0) {
+            setError(
+              "Could not load cocktail recipes. Showing starter recipes instead.",
+            );
           }
         }
       } catch {
-        if (!cancelled) setError("Could not load recipes. Please refresh.");
+        if (!cancelled) {
+          setRecipes(ensureIds(seedRecipes));
+          setError("Could not load recipes. Showing starter recipes instead.");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -63,13 +85,13 @@ export function useRecipes() {
     };
   }, []);
 
-  // useEffect #2: persist to localStorage when recipes change
   useEffect(() => {
     if (loading) return;
+
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes));
     } catch {
-      // Keep UI running even if storage fails
+      // keep UI running even if localStorage fails
     }
   }, [recipes, loading]);
 
