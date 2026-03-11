@@ -37,7 +37,7 @@ https://www.thecocktaildb.com
 
 On first load:
 
-Starter coffee recipes are loaded.
+Starter (seed) coffee recipes are loaded.
 
 Coffee-related drinks are fetched from TheCocktailDB.
 
@@ -154,3 +154,7 @@ Persistent state management
 📄 License
 
 This project was created for educational purposes.
+
+## Final Submission
+
+Project submitted for review.
