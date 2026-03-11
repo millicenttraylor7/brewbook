@@ -37,7 +37,7 @@ https://www.thecocktaildb.com
 
 On first load:
 
-Starter coffee recipes are loaded.
+Starter (seed) coffee recipes are loaded.
 
 Coffee-related drinks are fetched from TheCocktailDB.
 
